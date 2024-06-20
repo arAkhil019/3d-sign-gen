@@ -16,11 +16,11 @@ pose_bone = armature.pose.bones # Name of the bone
 b1 = "Bone"
 b2 = "Bone001"
 b3 = "Bone002"
-a = 60
-desired_angle = math.radians(60)
-parent_bone = armature.pose.bones.get('Bone')  # Name of the parent bone
-child_bone1 = armature.pose.bones.get('Bone001')  # Name of the first child bone
-child_bone2 = armature.pose.bones.get('Bone002')  # Name of the second child bone
+a = -3.69
+desired_angle = math.radians(a)
+parent_bone = armature.pose.bones.get('Bone001')  # Name of the parent bone
+child_bone1 = armature.pose.bones.get('Bone002')  # Name of the first child bone
+child_bone2 = armature.pose.bones.get('Bone003')  # Name of the second child bone
 
 print(parent_bone,child_bone1,child_bone2)
 initial_angle1 = parent_bone.matrix.to_3x3().inverted().normalized().to_euler()[0] - child_bone1.matrix.to_3x3().inverted().normalized().to_euler()[0]
