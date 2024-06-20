@@ -71,23 +71,17 @@ def poseHand(hand,angles):
         arm = "Armature"
     j=0
     for i in range(1,15,3):
-        set_bone_angle(arm, f"Bone0{i}.{hand}", f"Bone{i}.{hand}", angles[j])
-        set_bone_angle(arm, f"Bone{i}.{hand}", f"Bone{i+1}.{hand}", angles[j+1])
-        set_bone_angle(arm, f"Bone{i+1}.{hand}", f"Bone{i+2}.{hand}", angles[j+2])
-        j+=4
+        set_bone_angle(arm, f"Bone0{i}.R", f"Bone{i}.R", angles[j])
+        set_bone_angle(arm, f"Bone{i}.R", f"Bone{i+1}.R", angles[j+1])
+        set_bone_angle(arm, f"Bone{i+1}.R", f"Bone{i+2}.R", angles[j+2])
+        j+=3
     armature_obj = bpy.data.objects.get(arm)
-    
+    set_bone_at(armature_obj, 'Bone', tuple(angles[15:18]))
+    set_bone_at(armature_obj, 'BoneR.R', tuple(angles[18:21]))
+    move_bone = armature_obj.pose.bones["Bone07.R"]
+    move_bone.location = tuple(angles[21:23]+[0])
 
 input = [10, 2, 11, 76, 95, 17, 86, 81, 18, 61, 98, 17, 8, 17, 7, 79, 1, 1, -3, -77, -77, 67, 72, 26, 31, 34, 23, 147, 3, 21, 156, 15, 19, 164, 23, 17, 169, 15, 104, 1, 1, 38, -83, -83, 20, 65]
 
-
-j=1
-for i in range(1,15,3):
-    set_bone_angle("Armature.001", f"Bone0{i}.R", f"Bone{i}.R", angles[j])
-    set_bone_angle("Armature.001", f"Bone{i}.R", f"Bone{i+1}.R", angles[j+1])
-    set_bone_angle("Armature.001", f"Bone{i+1}.R", f"Bone{i+2}.R", angles[j+2])
-    j+=4
-
-armature_obj = bpy.data.objects.get('Armature.001')
-set_bone_at(armature_obj, 'Bone', angles['xyz'])
-set_bone_at(armature_obj, 'BoneR.R', angles['r'])
+poseHand('L',input[:23])
+poseHand('R',input[23:])
