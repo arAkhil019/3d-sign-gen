@@ -62,23 +62,9 @@ def set_bone_at(armature_obj, bone_name, angles):
     bpy.context.view_layer.update()
     
     return True
-
-def poseHand(hand,angles):
-    order = [1,2,3,5,6,7,9,10,11,13,14,15,17,18,19,'x','y','z','rx','ry','rz','x0','y0']
-    if hand == 'L':
-        arm = "Armature.001"
-    else:
-        arm = "Armature"
-    j=0
-    for i in range(1,15,3):
-        set_bone_angle(arm, f"Bone0{i}.{hand}", f"Bone{i}.{hand}", angles[j])
-        set_bone_angle(arm, f"Bone{i}.{hand}", f"Bone{i+1}.{hand}", angles[j+1])
-        set_bone_angle(arm, f"Bone{i+1}.{hand}", f"Bone{i+2}.{hand}", angles[j+2])
-        j+=4
-    armature_obj = bpy.data.objects.get(arm)
     
-
-input = [10, 2, 11, 76, 95, 17, 86, 81, 18, 61, 98, 17, 8, 17, 7, 79, 1, 1, -3, -77, -77, 67, 72, 26, 31, 34, 23, 147, 3, 21, 156, 15, 19, 164, 23, 17, 169, 15, 104, 1, 1, 38, -83, -83, 20, 65]
+    
+angles = {1: 46, 2: 21, 3: 8, 5: 10, 6: 2, 7: 2, 9: 8, 10: 6, 11: 3, 13: 17, 14: 138, 15: 13, 17: 29, 18: 130, 19: 10, 'xyz': (103, -1, -1), 'r': (4, -88, -88)}
 
 
 j=1
