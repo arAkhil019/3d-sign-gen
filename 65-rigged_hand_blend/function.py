@@ -65,7 +65,7 @@ def set_bone_at(armature_obj, bone_name, angles):
 
 def poseHand(hand,angles):
     order = [1,2,3,5,6,7,9,10,11,13,14,15,17,18,19,'x','y','z','rx','ry','rz','x0','y0']
-    if hand == 'L':
+    if hand == 'R':
         arm = "Armature.001"
     else:
         arm = "Armature"
