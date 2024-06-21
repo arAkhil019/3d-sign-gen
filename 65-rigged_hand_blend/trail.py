@@ -1,23 +1,49 @@
 import bpy
-import math
 
-# Select the armature
-print(bpy.data)
-armature = bpy.data.objects['Armature']  # Name of the armature
+# Clear existing objects
+bpy.ops.object.select_all(action='DESELECT')
+bpy.ops.object.select_by_type(type='MESH')
+bpy.ops.object.delete()
 
-# Ensure the armature is in pose mode
-bpy.context.view_layer.objects.active = armature
-bpy.ops.object.mode_set(mode='POSE')
+# Define vertices of the box
+vertices = [
+    (0, 0, 0),
+    (100, 0, 0),
+    (100, 100, 0),
+    (0, 100, 0),
+    (0, 0, 100),
+    (100, 0, 100),
+    (100, 100, 100),
+    (0, 100, 100)
+]
 
-# Access a specific bone in pose mode
-pose_bone = armature.pose.bones["Bone"]  # Name of the bone
+# Define edges (pairs of vertices)
+edges = [
+    (0, 1), (1, 2), (2, 3), (3, 0),  # Bottom face
+    (4, 5), (5, 6), (6, 7), (7, 4),  # Top face
+    (0, 4), (1, 5), (2, 6), (3, 7)   # Vertical edges connecting bottom to top
+]
 
-dir(pose_bone)
-# Set the bone location (relative to its parent)
-pose_bone.location = ( 0.0, 0.0, 0.5)  # Example coordinates
+# Create new mesh and object
+mesh = bpy.data.meshes.new("BoxMesh")
+obj = bpy.data.objects.new("BoxObject", mesh)
 
-# Set the bone rotation (Euler angles in radians)
-pose_bone.rotation_euler = (math.radians(45), math.radians(30), math.radians(60))  # Example rotation angles
+# Set mesh location and scene context
+obj.location = bpy.context.scene.cursor.location
+bpy.context.scene.collection.objects.link(obj)
 
-# Update the scene to apply the changes
-bpy.context.view_layer.update()
+# Create vertices
+mesh.from_pydata(vertices, [], [])
+
+# Update mesh geometry
+mesh.update()
+
+# Create edges
+for v1, v2 in edges:
+    mesh.edges.add(1)
+    mesh.edges[-1].vertices[0] = v1
+    mesh.edges[-1].vertices[1] = v2
+
+# Set object to be selected and active
+bpy.context.view_layer.objects.active = obj
+obj.select_set(True)

@@ -63,12 +63,59 @@ def set_bone_at(armature_obj, bone_name, angles):
     
     return True
 
+def moveChildBone(arm,bone,loc):
+# Assuming you have an armature object selected or identified
+# For example, if the armature is named "Armature":
+    armature_obj = bpy.data.objects.get(arm)
+
+    if armature_obj and armature_obj.type == 'ARMATURE':
+        armature = armature_obj.data
+    
+    # Access a specific bone by name (replace with your bone's name)
+        bone_name = bone
+        bone = armature.bones.get(bone_name)
+    
+        if bone:
+        # Set new location for the armature
+            new_location = loc  # Example new location
+            armature_obj.location = new_location
+        
+        # Get the current world matrix of the bone
+            bone_matrix = armature_obj.matrix_world @ bone.matrix_local
+        
+        # Calculate the translation component of the bone's matrix
+            bone_translation = bone_matrix.translation
+        
+        # Optionally, apply the bone's location to armature
+            armature_obj.location += bone_translation
+        
+        # Update the scene to reflect changes
+            bpy.context.view_layer.update()
+
+        else:
+            print(f"Bone '{bone_name}' not found in armature.")
+    else:
+        print("Armature object not found or is not of type 'ARMATURE'.")
+
+
+def setPosition(arms,input):
+    i1,i2 = input[:23],input[23:]
+    x0,y0 = tuple(i1[21:23])
+    x1,y1 = tuple(i2[21:23])
+    if not(-50 <= (x1-x0) <= 50):
+        x0,x1 = 25, 75
+    bone = "Bone07.R"
+    moveChildBone(arms[0], bone, tuple([x0,y0,0]))
+    moveChildBone(arms[1], bone, tuple([x1,y1,0]))
+    
+
 def poseHand(hand,angles):
     order = [1,2,3,5,6,7,9,10,11,13,14,15,17,18,19,'x','y','z','rx','ry','rz','x0','y0']
     if hand == 'R':
         arm = "Armature.001"
     else:
         arm = "Armature"
+#        angles = angles[:18] + [ i*(-1) for i in angles[18:21]] + angles[21:]
     j=0
     for i in range(1,15,3):
         set_bone_angle(arm, f"Bone0{i}.R", f"Bone{i}.R", angles[j])
@@ -78,10 +125,11 @@ def poseHand(hand,angles):
     armature_obj = bpy.data.objects.get(arm)
     set_bone_at(armature_obj, 'Bone', tuple(angles[15:18]))
     set_bone_at(armature_obj, 'BoneR.R', tuple(angles[18:21]))
-    move_bone = armature_obj.pose.bones["Bone07.R"]
-    move_bone.location = tuple(angles[21:23]+[0])
+#    move_bone = armature_obj.pose.bones["Bone"]
+#    move_bone.location = tuple(angles[21:23]+[0])
 
 input = [10, 2, 11, 76, 95, 17, 86, 81, 18, 61, 98, 17, 8, 17, 7, 79, 1, 1, -3, -77, -77, 67, 72, 26, 31, 34, 23, 147, 3, 21, 156, 15, 19, 164, 23, 17, 169, 15, 104, 1, 1, 38, -83, -83, 20, 65]
 
 poseHand('L',input[:23])
 poseHand('R',input[23:])
+#setPosition(["Armature","Armature.001"],input)
